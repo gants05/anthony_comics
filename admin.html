@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | Anthony Sama</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-box">
+            <h2>ACCESO RESTRINGIDO</h2>
+            <p>Introduce la contraseña maestra</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <button class="btn btn-primary" onclick="attemptLogin()">ENTRAR</button>
+            <p id="login-error" class="error-msg"></p>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="dashboard" class="dashboard hidden">
+        <header class="admin-header">
+            <div class="logo">POCKET ADMIN</div>
+            <button class="btn btn-save" onclick="saveChanges()">💾 GUARDAR CAMBIOS</button>
+        </header>
+
+        <div class="admin-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <button class="tab-btn active" onclick="switchTab('config')">Configuración</button>
+                <button class="tab-btn" onclick="switchTab('series')">Series y Cómics</button>
+                <button class="tab-btn" onclick="window.location.href='index.html'">Ver Sitio Web</button>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="content-area">
+
+                <!-- Tab: Site Config -->
+                <div id="tab-config" class="tab-content active">
+                    <h2>Configuración de Portada (Hero)</h2>
+                    <div class="form-group">
+                        <label>Título Principal</label>
+                        <input type="text" id="hero-title">
+                    </div>
+                    <div class="form-group">
+                        <label>Etiqueta (Tag)</label>
+                        <input type="text" id="hero-tag">
+                    </div>
+                    <div class="form-group">
+                        <label>Sinopsis</label>
+                        <textarea id="hero-synopsis" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Imagen de Portada (URL o ruta local)</label>
+                        <input type="text" id="hero-cover">
+                    </div>
+                    <div class="form-group">
+                        <label>ID de Serie Destacada</label>
+                        <input type="text" id="hero-target">
+                    </div>
+                </div>
+
+                <!-- Tab: Series Manager -->
+                <div id="tab-series" class="tab-content">
+                    <div class="section-header">
+                        <h2>Gestión de Series</h2>
+                        <button class="btn btn-small" onclick="addSeries()">+ Nueva Serie</button>
+                    </div>
+                    <div id="series-list" class="series-list">
+                        <!-- Series items injected by JS -->
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Edit Series Modal -->
+    <div id="edit-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">×</span>
+            <h2 id="modal-title">Editar Serie</h2>
+
+            <div class="form-group">
+                <label>Título</label>
+                <input type="text" id="edit-title">
+            </div>
+            <div class="form-group">
+                <label>Género</label>
+                <input type="text" id="edit-genre">
+            </div>
+            <div class="form-group">
+                <label>Estado (ej: LEER, PRÓXIMAMENTE)</label>
+                <input type="text" id="edit-status">
+            </div>
+            <div class="form-group">
+                <label>Portada (URL/Ruta)</label>
+                <input type="text" id="edit-cover">
+            </div>
+
+            <div style="margin: 1rem 0; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="compression-toggle" checked>
+                    <span>⚡ Activar Compresión (Recomendado)</span>
+                </label>
+                <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 5px;">Desactívalo si las imágenes dan error o
+                    se ven negras.</p>
+            </div>
+
+            <h3>Capítulos</h3>
+            <div id="chapter-list">
+                <!-- Chapters items -->
+            </div>
+            <button class="btn btn-small" onclick="addChapter()">+ Agregar Capítulo</button>
+
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="saveSeriesEdits()">Confirmar</button>
+                <button class="btn btn-danger" onclick="deleteObj()">Eliminar Serie</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Folder Modal -->
+    <div id="import-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeImportModal()">×</span>
+            <h2>Importar desde Carpeta</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1rem;">
+                Usa esto si ya copiaste tus imágenes a una carpeta dentro de 'assets' y quieres agregarlas en bloque.
+            </p>
+
+            <div class="form-group">
+                <label>Ruta de la Carpeta (dentro de assets/)</label>
+                <input type="text" id="imp-folder" placeholder="ej: han hanzai/cap 1">
+            </div>
+
+            <div class="form-group" style="display: flex; gap: 1rem;">
+                <div style="flex: 1;">
+                    <label>Prefijo Archivo</label>
+                    <input type="text" id="imp-prefix" placeholder="ej: pagina_ (o dejar vacío)">
+                </div>
+                <div style="flex: 1;">
+                    <label>Extensión</label>
+                    <select id="imp-ext"
+                        style="width: 100%; padding: 0.8rem; background: #0f172a; color: white; border: 1px solid #475569; border-radius: 6px;">
+                        <option value=".jpg">.jpg</option>
+                        <option value=".png">.png</option>
+                        <option value=".jpeg">.jpeg</option>
+                        <option value=".webp">.webp</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" style="display: flex; gap: 1rem;">
+                <div style="flex: 1;">
+                    <label>Desde (Número)</label>
+                    <input type="number" id="imp-start" value="1"
+                        style="width: 100%; padding: 0.8rem; background: #0f172a; color: white; border: 1px solid #475569; border-radius: 6px;">
+                </div>
+                <div style="flex: 1;">
+                    <label>Hasta (Número)</label>
+                    <input type="number" id="imp-end" value="20"
+                        style="width: 100%; padding: 0.8rem; background: #0f172a; color: white; border: 1px solid #475569; border-radius: 6px;">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="runImport()">Generar Rutas</button>
+                <button class="btn btn-danger" onclick="closeImportModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Manager Modal -->
+    <div id="page-manager-modal" class="modal hidden">
+        <div class="modal-content" style="width: 800px; max-width: 95%;">
+            <span class="close-modal" onclick="closePageManager()">×</span>
+            <h2 id="manager-title">Gestionar Páginas</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                Visualiza y elimina páginas de este capítulo. Arrastra para reordenar (próximamente) o usa el botón para
+                borrar.
+            </p>
+
+            <div id="pages-grid" class="pages-preview-grid">
+                <!-- Pages injected by JS -->
+            </div>
+
+            <div class="modal-actions" style="justify-content: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="closePageManager()">LISTO</button>
+            </div>
+        </div>
+    </div>
+    <script src="data.js"></script>
+    <script src="admin.js"></script>
+</body>
+
+</html>

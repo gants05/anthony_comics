@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anthony Sama | Manga & Comics</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for Social Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">ANTHONY SAMA</div>
+        <ul class="nav-links">
+            <li><a href="#home">Inicio</a></li>
+            <li><a href="#gallery">Cómics</a></li>
+            <li><a href="#about">Sobre Mí</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section (Dynamic) -->
+    <header id="home" class="hero">
+        <!-- Content injected by JS -->
+    </header>
+
+    <!-- Comic Gallery (Dynamic) -->
+    <section id="gallery" class="gallery-section">
+        <h2>BIBLIOTECA DE CÓMICS</h2>
+        <div id="comic-grid" class="comic-grid">
+            <!-- Cards injected by JS -->
+        </div>
+    </section>
+
+    <!-- Series Detail Overlay -->
+    <div id="series-overlay" class="series-overlay">
+        <button class="close-btn" onclick="closeSeriesDetail()">✕</button>
+        <div class="series-modal-content">
+            <div class="series-header-section">
+                <img id="detail-cover" src="" alt="Cover" class="detail-cover">
+                <div class="detail-info">
+                    <h2 id="detail-title">Título de la Serie</h2>
+                    <div class="detail-meta">
+                        <span id="detail-genre" class="genre-tag">Género</span>
+                        <span id="detail-status" class="status-badge">Estado</span>
+                    </div>
+                    <p id="detail-desc" class="detail-description">Sinopsis...</p>
+                </div>
+            </div>
+            <div class="chapter-section">
+                <h3>Capítulos Disponibles</h3>
+                <div id="detail-chapters" class="chapter-grid">
+                    <!-- Chapters injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mode Selector Modal -->
+    <div id="mode-selector" class="series-overlay hidden">
+        <div class="mode-modal-content">
+            <h2>¿Cómo quieres leer?</h2>
+            <div class="mode-options">
+                <div class="mode-card" onclick="startReader('single')">
+                    <div class="visual-icon single"></div>
+                    <h3>Una Página</h3>
+                    <p>Clásico y detallado.</p>
+                </div>
+                <div class="mode-card" onclick="startReader('double')">
+                    <div class="visual-icon double"></div>
+                    <h3>Doble Página</h3>
+                    <p>Ideal para PC.</p>
+                </div>
+                <div class="mode-card" onclick="startReader('cascade')">
+                    <div class="visual-icon cascade">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <h3>Cascada</h3>
+                    <p>Scroll vertical.</p>
+                </div>
+            </div>
+            <button class="btn-text" onclick="closeModeSelector()">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Reader Modal (Hidden by default) -->
+    <div id="reader-modal" class="reader-modal">
+        <div class="reader-controls top">
+            <button class="icon-btn" onclick="closeReader()">✕</button>
+            <span id="chapter-title">Capítulo 1</span>
+        </div>
+
+        <div class="reader-canvas" id="reader-canvas">
+            <img id="current-page" src="" alt="Page Content">
+        </div>
+
+        <div class="reader-controls bottom">
+            <div class="zoom-controls">
+                <span style="font-size: 0.8rem;">🔍</span>
+                <input type="range" id="zoom-slider" min="50" max="300" value="100" title="Ajustar Tamaño">
+            </div>
+            <button class="nav-btn" onclick="prevPage()">← Anterior</button>
+            <span id="page-indicator">Página 1 / 10</span>
+            <button class="nav-btn" onclick="nextPage()">Siguiente →</button>
+        </div>
+    </div>
+
+    <!-- Footer / Social Media -->
+    <footer id="about" class="site-footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <div class="logo">ANTHONY SAMA</div>
+                <p>Manga artist & Comic creator. Explorando los límites de la narrativa visual a través de mundos
+                    oscuros y épicos.</p>
+            </div>
+
+            <div class="footer-social">
+                <h3>SÍGUEME</h3>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/anthonysama05/" class="social-link" title="Instagram"
+                        target="_blank" rel="noopener">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@anthonysama05" class="social-link" title="TikTok" target="_blank"
+                        rel="noopener">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://discord.gg/xU8ffTgg" class="social-link" title="Discord" target="_blank"
+                        rel="noopener">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Anthony Sama. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Script -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
